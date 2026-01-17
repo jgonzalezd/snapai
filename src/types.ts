@@ -2,6 +2,7 @@ export interface ConfigData {
   openai_api_key?: string;
   google_api_key?: string;
   default_output_path?: string;
+  default_model?: 'dall-e-2' | 'dall-e-3' | 'gpt-image-1' | 'gemini-nano' | 'gemini-nano-pro';
 }
 
 export interface IconGenerationOptions {

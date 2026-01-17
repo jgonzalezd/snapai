@@ -9,6 +9,7 @@ export default class ConfigCommand extends Command {
   static examples = [
     '<%= config.bin %> <%= command.id %> --api-key sk-your-openai-key',
     '<%= config.bin %> <%= command.id %> --google-api-key your-google-key',
+    '<%= config.bin %> <%= command.id %> --default-model gpt-image-1',
     '<%= config.bin %> <%= command.id %> --show',
   ];
 
@@ -18,6 +19,10 @@ export default class ConfigCommand extends Command {
     }),
     'google-api-key': Flags.string({
       description: 'Set Google API key for Gemini models',
+    }),
+    'default-model': Flags.string({
+      description: 'Set default model: dall-e-2, dall-e-3, gpt-image-1, gemini-nano, gemini-nano-pro',
+      options: ['dall-e-2', 'dall-e-3', 'gpt-image-1', 'gemini-nano', 'gemini-nano-pro'],
     }),
     show: Flags.boolean({
       description: 'Show current configuration',
@@ -33,6 +38,10 @@ export default class ConfigCommand extends Command {
 
     if (flags['google-api-key']) {
       await this.setGoogleApiKey(flags['google-api-key']);
+    }
+
+    if (flags['default-model']) {
+      await this.setDefaultModel(flags['default-model']);
     }
 
     if (flags.show) {
@@ -69,6 +78,13 @@ export default class ConfigCommand extends Command {
     this.log(chalk.dim('Built with ❤️  by \u001b]8;;https://codewithbeto.dev\u001b\\codewithbeto.dev\u001b]8;;\u001b\\ - Ship faster, contribute more, lead with confidence'));
   }
 
+  private async setDefaultModel(model: string): Promise<void> {
+    await ConfigService.set('default_model', model as 'dall-e-2' | 'dall-e-3' | 'gpt-image-1' | 'gemini-nano' | 'gemini-nano-pro');
+    this.log(chalk.green(`✅ Default model set to ${chalk.bold(model)}!`));
+    this.log('');
+    this.log(chalk.dim('Built with ❤️  by \u001b]8;;https://codewithbeto.dev\u001b\\codewithbeto.dev\u001b]8;;\u001b\\ - Ship faster, contribute more, lead with confidence'));
+  }
+
   private async showConfig(): Promise<void> {
     const config = await ConfigService.getConfig();
     
@@ -93,6 +109,14 @@ export default class ConfigCommand extends Command {
     
     if (config.default_output_path) {
       this.log(`📁 Default Output: ${chalk.blue(config.default_output_path)}`);
+    }
+    
+    if (config.default_model) {
+      this.log(`🤖 Default Model: ${chalk.blue(config.default_model)}`);
+    } else {
+      this.log(`🤖 Default Model: ${chalk.yellow('Not configured (using gpt-image-1)')}`);
+      this.log(chalk.gray('   Set with: snapai config --default-model MODEL_NAME'));
+      this.log(chalk.gray('   Available models: dall-e-2, dall-e-3, gpt-image-1, gemini-nano, gemini-nano-pro'));
     }
     
     this.log('');

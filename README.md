@@ -42,6 +42,9 @@ snapai config --api-key sk-your-openai-api-key-here
 
 # For Gemini Nano Banana models
 snapai config --google-api-key your-google-api-key-here
+
+# Optional: Set a default model (see Configuration section for details)
+snapai config --default-model gpt-image-1
 ```
 
 ### Generate Your First Icon! 🎉
@@ -141,7 +144,13 @@ snapai icon --prompt "modern calculator app with clean design and glass-like ele
 
 # Use Gemini Nano Banana Pro (high-quality, Google's premium image model)
 snapai icon --prompt "premium music player app with vibrant gradients and modern styling" --model gemini-nano-pro
+
+# Use your configured default model (no --model flag needed)
+snapai icon --prompt "modern app icon with clean design"
 ```
+
+> [!TIP]
+> Set a default model with `snapai config --default-model MODEL_NAME` to avoid specifying `--model` every time. You can still override it with the `--model` flag when needed.
 
 ##### Multiple Images
 
@@ -199,7 +208,7 @@ snapai icon --prompt "edgy gaming app with dark theme and bold red accent colors
 | ----------------- | ----- | ------------------------------------- | ------------- | ------------------------------------ |
 | `--prompt`        | `-p`  | text                                  | _required_    | Description of the icon to generate  |
 | `--output`        | `-o`  | path                                  | `./assets`    | Output directory for generated icons |
-| `--model`         | `-m`  | `gpt-image-1`, `dall-e-3`, `dall-e-2`, `gemini-nano`, `gemini-nano-pro` | `gpt-image-1` | AI model to use                      |
+| `--model`         | `-m`  | `gpt-image-1`, `dall-e-3`, `dall-e-2`, `gemini-nano`, `gemini-nano-pro` | `gpt-image-1` or configured default | AI model to use (can be set via `config --default-model`) |
 | `--size`          | `-s`  | See sizes table below                 | `1024x1024`   | Icon size (model-dependent)          |
 | `--quality`       | `-q`  | See quality table below               | `auto`        | Image quality (model-dependent)      |
 | `--background`    | `-b`  | `transparent`, `opaque`, `auto`       | `auto`        | Background type (gpt-image-1 only)   |
@@ -327,6 +336,41 @@ snapai icon --prompt "futuristic augmented reality app with holographic glasses 
 snapai config --show                    # Check your setup
 snapai config --api-key YOUR_KEY        # Set/update OpenAI API key
 snapai config --google-api-key YOUR_KEY # Set/update Google API key for Gemini models
+snapai config --default-model MODEL     # Set default model (dall-e-2, dall-e-3, gpt-image-1, gemini-nano, gemini-nano-pro)
+```
+
+#### Setting a Default Model
+
+You can set a default model that will be used when you don't specify `--model` in the `icon` command:
+
+```bash
+# Set GPT-Image-1 as default (best quality)
+snapai config --default-model gpt-image-1
+
+# Set DALL-E 2 as default (fast, cost-effective)
+snapai config --default-model dall-e-2
+
+# Set Gemini Nano as default (fast, Google's model)
+snapai config --default-model gemini-nano
+
+# View your current default model
+snapai config --show
+```
+
+Available models:
+- `gpt-image-1` - Best quality, balanced features (default if not configured)
+- `dall-e-3` - Creative, artistic designs
+- `dall-e-2` - Fast, cost-effective
+- `gemini-nano` - Fast, Google's efficient model
+- `gemini-nano-pro` - High-quality, Google's premium model
+
+Once set, you can generate icons without specifying `--model`:
+```bash
+# Uses your configured default model
+snapai icon --prompt "modern calculator app icon"
+
+# Override the default for this command
+snapai icon --prompt "artistic icon" --model dall-e-3
 ```
 
 > [!NOTE]  

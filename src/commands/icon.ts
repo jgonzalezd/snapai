@@ -4,6 +4,7 @@ import path from "path";
 import chalk from "chalk";
 import { OpenAIService } from "../services/openai.js";
 import { GeminiService } from "../services/gemini.js";
+import { ConfigService } from "../services/config.js";
 import { ValidationService } from "../utils/validation.js";
 import { StyleTemplates } from "../utils/styleTemplates.js";
 
@@ -48,8 +49,7 @@ export default class IconCommand extends Command {
     model: Flags.string({
       char: "m",
       description:
-        "AI model: gpt-image-1 (best), dall-e-3 (creative), dall-e-2 (fast), gemini-nano (Gemini Flash), gemini-nano-pro (Gemini Pro)",
-      default: "gpt-image-1",
+        "AI model: gpt-image-1 (best), dall-e-3 (creative), dall-e-2 (fast), gemini-nano (Gemini Flash), gemini-nano-pro (Gemini Pro). Can be set via config --default-model",
       options: ["dall-e-2", "dall-e-3", "gpt-image-1", "gemini-nano", "gemini-nano-pro"],
     }),
     size: Flags.string({
@@ -126,6 +126,13 @@ export default class IconCommand extends Command {
         this.error(outputError);
       }
 
+      // Get model from flag, config, or default
+      let model = flags.model;
+      if (!model) {
+        const defaultModel = await ConfigService.get('default_model');
+        model = defaultModel || 'gpt-image-1';
+      }
+
       this.log(chalk.blue("🎨 Generating your app icon..."));
       this.log("");
       this.log(
@@ -143,14 +150,14 @@ export default class IconCommand extends Command {
       }
 
       // Determine which service to use based on model
-      const isGeminiModel = flags.model === "gemini-nano" || flags.model === "gemini-nano-pro";
+      const isGeminiModel = model === "gemini-nano" || model === "gemini-nano-pro";
       
       // Generate icon using appropriate service
       const imageBase64Array = isGeminiModel
         ? await GeminiService.generateIcon({
             prompt: flags.prompt,
             output: flags.output,
-            model: flags.model as "gemini-nano" | "gemini-nano-pro",
+            model: model as "gemini-nano" | "gemini-nano-pro",
             size: flags.size,
             numImages: flags["num-images"],
             rawPrompt: flags["raw-prompt"],
@@ -159,7 +166,7 @@ export default class IconCommand extends Command {
         : await OpenAIService.generateIcon({
             prompt: flags.prompt,
             output: flags.output,
-            model: flags.model as "dall-e-2" | "dall-e-3" | "gpt-image-1",
+            model: model as "dall-e-2" | "dall-e-3" | "gpt-image-1",
             size: flags.size,
             quality: flags.quality as
               | "auto"
