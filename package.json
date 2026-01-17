@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "prepare": "npm run build",
     "build:watch": "tsc --watch",
     "bundle": "webpack --config webpack.config.js",
     "prepare-publish": "pnpm run build && pnpm run bundle",
