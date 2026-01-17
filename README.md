@@ -2,7 +2,7 @@
 
 > AI-powered icon generation for React Native & Expo developers
 
-Create stunning app icons in seconds using OpenAI's latest image generation models. Perfect for developers who want professional icons without the design hassle! 🎨
+Create stunning app icons in seconds using OpenAI's latest image generation models or Google's Gemini Nano Banana models. Perfect for developers who want professional icons without the design hassle! 🎨
 
 ## ✨ Features
 
@@ -30,12 +30,18 @@ npx snapai
 ```
 
 > [!IMPORTANT]  
-> You'll need an OpenAI API key to generate icons. Get one at [platform.openai.com](https://platform.openai.com) - it costs ~$0.04 per icon!
+> You'll need an OpenAI API key or Google API key to generate icons. 
+> - OpenAI: Get one at [platform.openai.com](https://platform.openai.com) - it costs ~$0.04 per icon!
+> - Google: Get one at [aistudio.google.com](https://aistudio.google.com/apikey) - check Google's pricing for Gemini models
 
 ### Setup Your API Key
 
 ```bash
+# For OpenAI models
 snapai config --api-key sk-your-openai-api-key-here
+
+# For Gemini Nano Banana models
+snapai config --google-api-key your-google-api-key-here
 ```
 
 ### Generate Your First Icon! 🎉
@@ -129,6 +135,12 @@ snapai icon --prompt "artistic photo editing app with paintbrush and vibrant col
 
 # Use DALL-E 2 (fast, cost-effective)
 snapai icon --prompt "simple note-taking app with pencil icon and clean white background" --model dall-e-2
+
+# Use Gemini Nano Banana (fast, Google's image model)
+snapai icon --prompt "modern calculator app with clean design and glass-like elements" --model gemini-nano
+
+# Use Gemini Nano Banana Pro (high-quality, Google's premium image model)
+snapai icon --prompt "premium music player app with vibrant gradients and modern styling" --model gemini-nano-pro
 ```
 
 ##### Multiple Images
@@ -187,7 +199,7 @@ snapai icon --prompt "edgy gaming app with dark theme and bold red accent colors
 | ----------------- | ----- | ------------------------------------- | ------------- | ------------------------------------ |
 | `--prompt`        | `-p`  | text                                  | _required_    | Description of the icon to generate  |
 | `--output`        | `-o`  | path                                  | `./assets`    | Output directory for generated icons |
-| `--model`         | `-m`  | `gpt-image-1`, `dall-e-3`, `dall-e-2` | `gpt-image-1` | AI model to use                      |
+| `--model`         | `-m`  | `gpt-image-1`, `dall-e-3`, `dall-e-2`, `gemini-nano`, `gemini-nano-pro` | `gpt-image-1` | AI model to use                      |
 | `--size`          | `-s`  | See sizes table below                 | `1024x1024`   | Icon size (model-dependent)          |
 | `--quality`       | `-q`  | See quality table below               | `auto`        | Image quality (model-dependent)      |
 | `--background`    | `-b`  | `transparent`, `opaque`, `auto`       | `auto`        | Background type (gpt-image-1 only)   |
@@ -200,16 +212,16 @@ snapai icon --prompt "edgy gaming app with dark theme and bold red accent colors
 
 #### Model Comparison
 
-| Feature             | GPT-Image-1                           | DALL-E 3                        | DALL-E 2                    |
-| ------------------- | ------------------------------------- | ------------------------------- | --------------------------- |
-| **Quality**         | ⭐⭐⭐⭐⭐                            | ⭐⭐⭐⭐                        | ⭐⭐⭐                      |
-| **Speed**           | ⭐⭐⭐⭐                              | ⭐⭐⭐                          | ⭐⭐⭐⭐⭐                  |
-| **Cost**            | Medium                                | High                            | Low                         |
-| **Sizes**           | 1024x1024, 1536x1024, 1024x1536, auto | 1024x1024, 1792x1024, 1024x1792 | 256x256, 512x512, 1024x1024 |
-| **Quality Options** | auto, high, medium, low               | standard, hd                    | standard only               |
-| **Multiple Images** | 1-10                                  | 1 only                          | 1-10                        |
-| **Transparent BG**  | ✅                                    | ❌                              | ❌                          |
-| **Format Options**  | png, jpeg, webp                       | png only                        | png only                    |
+| Feature             | GPT-Image-1                           | DALL-E 3                        | DALL-E 2                    | Gemini Nano Banana            | Gemini Nano Banana Pro       |
+| ------------------- | ------------------------------------- | ------------------------------- | --------------------------- | ----------------------------- | ---------------------------- |
+| **Quality**         | ⭐⭐⭐⭐⭐                            | ⭐⭐⭐⭐                        | ⭐⭐⭐                      | ⭐⭐⭐⭐                        | ⭐⭐⭐⭐⭐                    |
+| **Speed**           | ⭐⭐⭐⭐                              | ⭐⭐⭐                          | ⭐⭐⭐⭐⭐                  | ⭐⭐⭐⭐⭐                      | ⭐⭐⭐⭐                      |
+| **Cost**            | Medium                                | High                            | Low                         | Low-Medium                    | Medium-High                  |
+| **Sizes**           | 1024x1024, 1536x1024, 1024x1536, auto | 1024x1024, 1792x1024, 1024x1792 | 256x256, 512x512, 1024x1024 | 1024x1024                     | 1024x1024, 2048x2048        |
+| **Quality Options** | auto, high, medium, low               | standard, hd                    | standard only               | standard only                 | standard only                |
+| **Multiple Images** | 1-10                                  | 1 only                          | 1-10                        | 1-10                          | 1-10                         |
+| **Transparent BG**  | ✅                                    | ❌                              | ❌                          | ❌                            | ❌                           |
+| **Format Options**  | png, jpeg, webp                       | png only                        | png only                    | png only                      | png only                     |
 
 #### Size Guide
 
@@ -232,6 +244,15 @@ snapai icon --prompt "edgy gaming app with dark theme and bold red accent colors
 - `512x512` - Medium square
 - `1024x1024` - Large square
 
+**Gemini Nano Banana:**
+
+- `1024x1024` - Square (recommended size)
+
+**Gemini Nano Banana Pro:**
+
+- `1024x1024` - Square
+- `2048x2048` - High resolution (up to 4K support)
+
 #### Quality Guide
 
 **GPT-Image-1:**
@@ -250,6 +271,12 @@ snapai icon --prompt "edgy gaming app with dark theme and bold red accent colors
 
 - `standard` - Only option available
 - API does not support quality option
+
+**Gemini Models:**
+
+- Quality options are handled automatically by the model
+- Gemini Nano Banana: Optimized for speed and efficiency
+- Gemini Nano Banana Pro: Higher fidelity with better detail and text rendering
 
 #### Style Guide
 
@@ -297,8 +324,9 @@ snapai icon --prompt "futuristic augmented reality app with holographic glasses 
 ### Configuration
 
 ```bash
-snapai config --show              # Check your setup
-snapai config --api-key YOUR_KEY  # Set/update API key
+snapai config --show                    # Check your setup
+snapai config --api-key YOUR_KEY        # Set/update OpenAI API key
+snapai config --google-api-key YOUR_KEY # Set/update Google API key for Gemini models
 ```
 
 > [!NOTE]  
@@ -315,22 +343,24 @@ snapai config --api-key YOUR_KEY  # Set/update API key
 - ✅ **No accounts** - Just install and use
 
 > [!WARNING]  
-> Keep your OpenAI API key secure! Never commit it to version control or share it publicly.
+> Keep your API keys secure! Never commit them to version control or share them publicly. This applies to both OpenAI and Google API keys.
 
 ## 💰 Pricing
 
-**SnapAI is 100% free!** You only pay OpenAI for generation:
+**SnapAI is 100% free!** You only pay for generation with your chosen provider:
 
 ### Model Pricing
 
-| Model           | Quality     | Size      | Price per Image | Best For                |
-| --------------- | ----------- | --------- | --------------- | ----------------------- |
-| **GPT-Image-1** | auto/medium | 1024x1024 | ~$0.04          | Balanced quality & cost |
-| **GPT-Image-1** | high        | 1024x1024 | ~$0.08          | Professional icons      |
-| **GPT-Image-1** | low         | 1024x1024 | ~$0.02          | Quick iterations        |
-| **DALL-E 3**    | standard    | 1024x1024 | ~$0.04          | Creative designs        |
-| **DALL-E 3**    | hd          | 1024x1024 | ~$0.08          | High-detail artwork     |
-| **DALL-E 2**    | standard    | 1024x1024 | ~$0.02          | Fast & economical       |
+| Model                  | Quality     | Size      | Price per Image | Best For                |
+| ---------------------- | ----------- | --------- | --------------- | ----------------------- |
+| **GPT-Image-1**        | auto/medium | 1024x1024 | ~$0.04          | Balanced quality & cost |
+| **GPT-Image-1**        | high        | 1024x1024 | ~$0.08          | Professional icons      |
+| **GPT-Image-1**        | low         | 1024x1024 | ~$0.02          | Quick iterations        |
+| **DALL-E 3**           | standard    | 1024x1024 | ~$0.04          | Creative designs        |
+| **DALL-E 3**           | hd          | 1024x1024 | ~$0.08          | High-detail artwork     |
+| **DALL-E 2**           | standard    | 1024x1024 | ~$0.02          | Fast & economical       |
+| **Gemini Nano Banana** | standard    | 1024x1024 | Check [Google's pricing](https://ai.google.dev/pricing) | Fast & efficient       |
+| **Gemini Nano Pro**    | standard    | 1024x1024 | Check [Google's pricing](https://ai.google.dev/pricing) | High-quality images    |
 
 ### Cost Optimization Tips
 
@@ -354,7 +384,7 @@ snapai icon --prompt "final fitness app icon with professional dumbbell design a
 ```
 
 > [!TIP]
-> Use `--model dall-e-2` for testing, then `--model gpt-image-1` for style exploration and variations, and `--model dall-e-3 --quality hd` for production! Combine with `--style` for consistent visual identity.
+> Use `--model dall-e-2` or `--model gemini-nano` for testing, then `--model gpt-image-1` for style exploration and variations, and `--model dall-e-3 --quality hd` or `--model gemini-nano-pro` for production! Combine with `--style` for consistent visual identity.
 
 ## 🚀 Advanced Usage
 
@@ -399,6 +429,10 @@ snapai icon --prompt "final fitness app icon with professional dumbbell design a
 # 5. Platform-specific versions
 snapai icon --prompt "iOS app store fitness icon with classic Apple design and subtle gradients" --model dall-e-3 --quality hd --style ios-classic
 snapai icon --prompt "Android play store fitness icon with Material Design and bold colors" --model dall-e-3 --quality hd --style android-material
+
+# Alternative with Gemini models
+snapai icon --prompt "iOS app store fitness icon with classic Apple design and subtle gradients" --model gemini-nano-pro --style ios-classic
+snapai icon --prompt "Android play store fitness icon with Material Design and bold colors" --model gemini-nano-pro --style android-material
 ```
 
 ## 🛠️ For Developers

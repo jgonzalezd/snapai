@@ -3,12 +3,13 @@ import fs from "fs-extra";
 import path from "path";
 import chalk from "chalk";
 import { OpenAIService } from "../services/openai.js";
+import { GeminiService } from "../services/gemini.js";
 import { ValidationService } from "../utils/validation.js";
 import { StyleTemplates } from "../utils/styleTemplates.js";
 
 export default class IconCommand extends Command {
   static description =
-    "Generate AI-powered app icons using OpenAI models (GPT-Image-1, DALL-E 3, DALL-E 2)";
+    "Generate AI-powered app icons using OpenAI models (GPT-Image-1, DALL-E 3, DALL-E 2) or Gemini models (Nano Banana, Nano Banana Pro)";
 
   static examples = [
     // Basic usage
@@ -47,9 +48,9 @@ export default class IconCommand extends Command {
     model: Flags.string({
       char: "m",
       description:
-        "AI model: gpt-image-1 (best), dall-e-3 (creative), dall-e-2 (fast)",
+        "AI model: gpt-image-1 (best), dall-e-3 (creative), dall-e-2 (fast), gemini-nano (Gemini Flash), gemini-nano-pro (Gemini Pro)",
       default: "gpt-image-1",
-      options: ["dall-e-2", "dall-e-3", "gpt-image-1"],
+      options: ["dall-e-2", "dall-e-3", "gpt-image-1", "gemini-nano", "gemini-nano-pro"],
     }),
     size: Flags.string({
       char: "s",
@@ -141,26 +142,39 @@ export default class IconCommand extends Command {
         this.log(chalk.yellow("⚠️  Using raw prompt (no style enhancement)"));
       }
 
-      // Generate icon using OpenAI
-      const imageBase64Array = await OpenAIService.generateIcon({
-        prompt: flags.prompt,
-        output: flags.output,
-        model: flags.model as "dall-e-2" | "dall-e-3" | "gpt-image-1",
-        size: flags.size,
-        quality: flags.quality as
-          | "auto"
-          | "standard"
-          | "hd"
-          | "high"
-          | "medium"
-          | "low",
-        background: flags.background as "transparent" | "opaque" | "auto",
-        outputFormat: flags["output-format"] as "png" | "jpeg" | "webp",
-        numImages: flags["num-images"],
-        moderation: flags.moderation as "low" | "auto",
-        rawPrompt: flags["raw-prompt"],
-        style: flags.style as any,
-      });
+      // Determine which service to use based on model
+      const isGeminiModel = flags.model === "gemini-nano" || flags.model === "gemini-nano-pro";
+      
+      // Generate icon using appropriate service
+      const imageBase64Array = isGeminiModel
+        ? await GeminiService.generateIcon({
+            prompt: flags.prompt,
+            output: flags.output,
+            model: flags.model as "gemini-nano" | "gemini-nano-pro",
+            size: flags.size,
+            numImages: flags["num-images"],
+            rawPrompt: flags["raw-prompt"],
+            style: flags.style as any,
+          })
+        : await OpenAIService.generateIcon({
+            prompt: flags.prompt,
+            output: flags.output,
+            model: flags.model as "dall-e-2" | "dall-e-3" | "gpt-image-1",
+            size: flags.size,
+            quality: flags.quality as
+              | "auto"
+              | "standard"
+              | "hd"
+              | "high"
+              | "medium"
+              | "low",
+            background: flags.background as "transparent" | "opaque" | "auto",
+            outputFormat: flags["output-format"] as "png" | "jpeg" | "webp",
+            numImages: flags["num-images"],
+            moderation: flags.moderation as "low" | "auto",
+            rawPrompt: flags["raw-prompt"],
+            style: flags.style as any,
+          });
 
       // Save all generated images
       const outputPaths = await this.saveBase64Images(
